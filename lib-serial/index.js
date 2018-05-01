@@ -1,14 +1,14 @@
 import {EventEmitter} from 'events'
 import SerialSocket from './SerialSocket.js'
-import BluetoothSocket from './BluetoothSocket.js'
-
-
+import {BluetoothSocket} from './BluetoothSocket.js'
 
 var DeviceInformation = Windows.Devices.Enumeration.DeviceInformation
 var SerialCommunication = Windows.Devices.SerialCommunication
 var Bluetooth = Windows.Devices.Bluetooth
 var Rfcomm = Bluetooth.Rfcomm
 
+
+// TODO: refactor & deprecate
 
 export class Devices extends EventEmitter {
 

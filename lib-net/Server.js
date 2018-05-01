@@ -1,6 +1,5 @@
 import {EventEmitter} from 'events'
-import process from 'process'
-import {errnoException} from './util'
+import {errnoException, emitErrorNT, emitListeningNT, emitCloseNT} from './util'
 import {Socket} from './Socket'
 
 
@@ -8,8 +7,7 @@ import {Socket} from './Socket'
 // which causes troubles with flexus-net module running in Chrome Apps.
 // Wrapped for interacting with WinRT APIs onlny in WinRT.
 if (typeof Windows != 'undefined') {
-	var StreamSocketListener = Windows.Networking.Sockets.StreamSocketListener
-	var StreamSocket = Windows.Networking.Sockets.StreamSocket
+	var {StreamSocketListener, StreamSocket} = Windows.Networking.Sockets
 }
 
 
@@ -41,6 +39,9 @@ export class Server extends EventEmitter {
 			}
 		}
 
+		// TODO find local IP
+		this._host = '::'
+		
 		this._connections = 0
 
 		this._handle = null
@@ -58,20 +59,32 @@ export class Server extends EventEmitter {
 		}
 	}
 
-	listen(port, cb) {
-		if (typeof cb === 'function') this.once('listening', cb)
+	listen(...args) {
+		this.listenAsync(...args)
+		return this
+	}
+	async listenAsync(...args) {
+		// last argument can be callback function.
+		var cb = args.pop()
+		if (typeof cb === 'function')
+			this.once('listening', cb)
+		else
+			args.push(cb)
 		// nodejs allows (accidentally?) calling .listen() multiple times and simply ignores it
 		if (this._handle) return false
-		// TODO find local IP
-		this._host = '::'
 		// WinRT needs port (or rather serviceName) to be string, but first, store it as number
-		this._port = port
-		port = port + ''
-		this._handle = new StreamSocketListener(port)
+		if (typeof args[0] === 'number') {
+			this._port = port
+			args[0] = args[0].toString()
+		}
+		this._handle = new StreamSocketListener()
 		this._handle.addEventListener('connectionreceived', this._onConnection)
-		this._handle.bindServiceNameAsync(port)
-					.done(this._onListen, err => this._onError(err, 'listen', this._host, port))
-		return this
+		try {
+			await this._handle.bindServiceNameAsync(...args)
+			this._onListen()
+		} catch(err) {
+			this._onError(err, 'listen', this._host, this._port)
+		}
 	}
 
 	get listening() {

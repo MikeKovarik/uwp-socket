@@ -1,5 +1,9 @@
-import UwpSocket from 'UwpSocket'
+import UwpSocket from 'uwp-socket'
 
+
+// TODO: add permission check for <DeviceCapability Name="serialcommunication"> and throw warning
+// because it's a common head scratching point
+// SerialDevice.fromIdAsync returns null if the permission is not set.
 
 var DeviceInformation = Windows.Devices.Enumeration.DeviceInformation
 var SerialCommunication = Windows.Devices.SerialCommunication

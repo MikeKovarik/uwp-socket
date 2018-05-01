@@ -1,12 +1,12 @@
 import {Duplex} from 'stream'
-import process from 'process'
-//import {errnoException, normalizeConnectArgs} from './util'
+import UwpSocket, {errnoException} from 'uwp-socket'
 import {normalizeConnectArgs} from './util'
-import UwpSocket, {errnoException} from 'UwpSocket'
 
 
 
-var StreamSocket = Windows.Networking.Sockets.StreamSocket
+if (typeof Windows != 'undefined') {
+	var StreamSocket = Windows.Networking.Sockets.StreamSocket
+}
 
 ///////////////////////////////////////////////////////////////////////
 /////////////////////////// SOCKET ////////////////////////////////////
