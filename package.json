@@ -4,35 +4,32 @@
   "description": "Easy to use Node-like wrapper for DataWriter/DataReader used in Windows UWP Apis like StreamSocket, Serial communication, etc...",
   "author": "Mike Kovařík",
   "license": "MIT",
-  "main": "dist/UwpSocket.js",
-  "module": "dist/UwpSocket.mjs",
-  "jsnext:main": "dist/UwpSocket.mjs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MikeKovarik/uwp-socket.git"
   },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
+  },
   "keywords": [
     "windows",
-    "winrt app",
-    "winrt store app",
-    "winrt api",
-    "uwp",
-    "uwa",
-    "winrt",
+    "windows store app",
     "windows universal app",
     "windows universal platform",
+    "winrt",
+    "uwp",
+    "uwa",
     "tcp",
     "bluetooth",
+    "btle",
+    "rfcomm",
+    "gatt",
     "serial",
     "socket"
   ],
   "devDependencies": {
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-stage-1": "^6.16.0",
-    "gulp": "^3.9.1",
-    "gulp-better-rollup": "^1.0.0",
-    "gulp-sourcemaps": "^2.1.1",
-    "gulp-watch": "^4.3.10",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "rollup": "^0.36.3",
     "rollup-plugin-babel": "^2.6.1"
   },
